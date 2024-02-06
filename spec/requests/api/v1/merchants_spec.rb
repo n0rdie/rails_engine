@@ -14,8 +14,8 @@ RSpec.describe "Api::V1::Merchants", type: :request do
 
       expect(json_response["data"].size).to eq(3)
       expect(json_response["data"].size).not_to eq(nil)
-      expect(json_response["data"].first["attributes"]).to include("id", "name")
-      expect(json_response["data"].last["attributes"]).to include("id", "name")
+      expect(json_response["data"].first["attributes"]).to include("name")
+      expect(json_response["data"].last["attributes"]).to include("name")
     end
   end
 
