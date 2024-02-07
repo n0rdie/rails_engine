@@ -21,6 +21,19 @@
         "branches": {
         }
       },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/controllers/api/v1/items/merchant.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/controllers/api/v1/items_controller.rb": {
         "lines": [
           0,
@@ -33,6 +46,40 @@
           0,
           0,
           null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/controllers/api/v1/merchants/items.rb": {
+        "lines": [
+          0,
+          0,
+          null,
+          0,
           0
         ],
         "branches": {
@@ -57,6 +104,31 @@
       },
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/controllers/application_controller.rb": {
         "lines": [
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/facades/item_destroyer.rb": {
+        "lines": [
+          null,
+          0,
+          0,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          null,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
           0,
           0
         ],
@@ -98,6 +170,31 @@
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/customer.rb": {
         "lines": [
           0,
+          0,
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/invoice.rb": {
+        "lines": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/invoice_item.rb": {
+        "lines": [
+          0,
+          0,
+          0,
           0
         ],
         "branches": {
@@ -105,6 +202,8 @@
       },
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/item.rb": {
         "lines": [
+          0,
+          0,
           0,
           0,
           0
@@ -115,6 +214,15 @@
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/merchant.rb": {
         "lines": [
           0,
+          0,
+          0,
+          0
+        ],
+        "branches": {
+        }
+      },
+      "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/models/transaction.rb": {
+        "lines": [
           0,
           0,
           0
@@ -147,6 +255,6 @@
         }
       }
     },
-    "timestamp": 1707259369
+    "timestamp": 1707342523
   }
 }
