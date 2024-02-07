@@ -81,7 +81,7 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(json_response["data"]["attributes"]["unit_price"]).to eq(100.99)
       expect(json_response["data"]["attributes"]["merchant_id"]).to eq(7)
 
-      patch api_v1_item_path(item_update)
+      patch "/api/v1/items/#{item.id}", headers: {"CONTENT_TYPE" => "application/json"}, params: JSON.generate(item: item_update)
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
