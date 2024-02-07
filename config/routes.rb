@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :merchants, only: [:index, :show]
-      resources :items, only: [:index, :show, :destroy]
+      resources :items, only: [:index, :show, :create, :destroy]
     end
   end
+
+  patch "/api/v1/items/:id", to: "api/v1/items#update"
 end

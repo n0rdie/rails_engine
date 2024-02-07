@@ -8,8 +8,27 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(item)
   end
 
+  def create
+    render json: ItemSerializer.new(Item.create(item_params))
+  end
+  
+  def update
+    item = Item.find(params[:id])
+    if item
+      item.update(item_params)
+      render json: ItemSerializer.new(item)
+    else
+      render json: { message: "Item update failed" }
+    end
+  end
+
   def destroy
     ItemDestroyer.destroy(params[:id])
   end
 
+  private
+
+  def item_params
+    params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id)
+  end
 end
