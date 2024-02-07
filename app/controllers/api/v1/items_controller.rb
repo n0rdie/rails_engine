@@ -8,4 +8,8 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(item)
   end
 
+  def destroy
+    ItemDestroyer.destroy(params[:id])
+  end
+
 end
