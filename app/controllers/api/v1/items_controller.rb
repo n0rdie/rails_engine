@@ -8,6 +8,10 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(item)
   end
 
+  def create
+    render json: ItemSerializer.new(Item.create(item_params))
+  end
+  
   def update
     item = Item.find(params[:id])
     if item
@@ -18,10 +22,8 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
-  private 
+  private
 
   def item_params
-    params.permit(:id, :name, :description, :unit_price, :merchant_id)
+    params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id)
   end
-
-end
