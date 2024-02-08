@@ -73,4 +73,16 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+require "simplecov"
+
+SimpleCov.start "rails" do
+  add_group "Facades", "app/facades"
+  add_group "Serializers", "app/serializers"
+
+  add_filter "app/mailers/"
+  add_filter "app/jobs/"
+  add_filter "app/channels/"
+end
+
+
 
