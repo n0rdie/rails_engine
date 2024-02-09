@@ -104,8 +104,22 @@ RSpec.describe "Api::V1::Items", type: :request do
       @item_5 = create(:item, name: "Facebook", unit_price: 13.64)
     end
 
-    it "searches for an item by name" do
-      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { name: "Google" }
+    it "will do a partial name search for an item and return an item that matches the criteria" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { name: "oG" }
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response["data"]["id"].to_i).to eq(@item_4.id)
+      expect(json_response["data"]["type"]).to eq("item")
+      expect(json_response["data"]["attributes"]["name"]).to eq("Google")
+      expect(json_response["data"]["attributes"]["description"]).to eq(@item_4.description)
+      expect(json_response["data"]["attributes"]["unit_price"]).to eq(27.32)
+      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_4.merchant_id)
+    end
+
+    it "searches for an item by both minimum and maximum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 20.99, max_price: 29.99 }
+
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
 
@@ -143,20 +157,6 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(json_response["data"]["attributes"]["description"]).to eq(@item_2.description)
       expect(json_response["data"]["attributes"]["unit_price"]).to eq(12.09)
       expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_2.merchant_id)
-    end
-
-    it "searches for an item by both maximum and minimum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
-      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 20.99, max_price: 29.99 }
-
-      expect(response).to have_http_status(:success)
-      json_response = JSON.parse(response.body)
-
-      expect(json_response["data"]["id"].to_i).to eq(@item_4.id)
-      expect(json_response["data"]["type"]).to eq("item")
-      expect(json_response["data"]["attributes"]["name"]).to eq("Google")
-      expect(json_response["data"]["attributes"]["description"]).to eq(@item_4.description)
-      expect(json_response["data"]["attributes"]["unit_price"]).to eq(27.32)
-      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_4.merchant_id)
     end
 
     it "returns a " do
