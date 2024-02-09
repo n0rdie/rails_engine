@@ -1,21 +1,31 @@
 class SearchFacade
-  def initialize(search_params)
-    @search_params = search_params
+  def initialize(name = nil, min = nil, max = nil)
+    @name = name
+    @min = min
+    @max = max
   end
 
-  def find_item
-    if @search_params[:name]
-      Item.find_name(@search_params[:name])
-    elsif @search_params[:min_price] && @search_params[:max_price]
-      Item.where("unit_price >= ?", @search_params[:min_price])
-          .where("unit_price <= ?", @search_params[:max_price])
-          .order(:name).first
-    elsif @search_params[:min_price]
-      Item.where("unit_price >= ?", @search_params[:min_price])
-          .order(:name).first
-    elsif @search_params[:max_price]
-      Item.where("unit_price <= ?", @search_params[:max_price])
-          .order(:name).first
-    end
+  def search_result
+    return find_name(@name).first if @name
+    return find_min_max(@min, @max) if @min && @max
+    return find_min(@min) if @min
+    return find_max(@max) if @max
+  end
+
+  def find_name(item_name)
+    Item.where("name ILIKE ?", "%#{item_name}%")
+  end
+
+  def find_min_max(min, max)
+    Item.where("unit_price >= #{min} AND unit_price <= #{max}")
+        .order("name").first
+  end
+
+  def find_min(min)
+    Item.where("unit_price >= ?", min).order(:name).first
+  end
+
+  def find_max(max)
+    Item.where("unit_price <= ?", max).order(:name).first
   end
 end
