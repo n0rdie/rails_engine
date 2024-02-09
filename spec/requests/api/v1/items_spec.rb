@@ -94,4 +94,75 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(json_response["data"]["attributes"]["merchant_id"]).to eq(7)
     end
   end
+
+  describe "GET /api/v1/items/find" do
+    before do
+      @item_1 = create(:item, name: "Alcoa", unit_price: 19.99)
+      @item_2 = create(:item, name: "Amazon", unit_price: 12.09)
+      @item_3 = create(:item, name: "Apple", unit_price: 11.99)
+      @item_4 = create(:item, name: "Google", unit_price: 27.32)
+      @item_5 = create(:item, name: "Facebook", unit_price: 13.64)
+    end
+
+    it "searches for an item by name" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { name: "Google" }
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response["data"]["id"].to_i).to eq(@item_4.id)
+      expect(json_response["data"]["type"]).to eq("item")
+      expect(json_response["data"]["attributes"]["name"]).to eq("Google")
+      expect(json_response["data"]["attributes"]["description"]).to eq(@item_4.description)
+      expect(json_response["data"]["attributes"]["unit_price"]).to eq(27.32)
+      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_4.merchant_id)
+    end
+
+    it "searches for an item by minimum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 12.00 }
+
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response["data"]["id"].to_i).to eq(@item_1.id)
+      expect(json_response["data"]["type"]).to eq("item")
+      expect(json_response["data"]["attributes"]["name"]).to eq("Alcoa")
+      expect(json_response["data"]["attributes"]["description"]).to eq(@item_1.description)
+      expect(json_response["data"]["attributes"]["unit_price"]).to eq(19.99)
+      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_1.merchant_id)
+    end
+
+    it "searches for an item by maximum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { max_price: 13.00 }
+
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response["data"]["id"].to_i).to eq(@item_2.id)
+      expect(json_response["data"]["type"]).to eq("item")
+      expect(json_response["data"]["attributes"]["name"]).to eq("Amazon")
+      expect(json_response["data"]["attributes"]["description"]).to eq(@item_2.description)
+      expect(json_response["data"]["attributes"]["unit_price"]).to eq(12.09)
+      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_2.merchant_id)
+    end
+
+    it "searches for an item by both maximum and minimum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 20.99, max_price: 29.99 }
+
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+
+      expect(json_response["data"]["id"].to_i).to eq(@item_4.id)
+      expect(json_response["data"]["type"]).to eq("item")
+      expect(json_response["data"]["attributes"]["name"]).to eq("Google")
+      expect(json_response["data"]["attributes"]["description"]).to eq(@item_4.description)
+      expect(json_response["data"]["attributes"]["unit_price"]).to eq(27.32)
+      expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_4.merchant_id)
+    end
+
+    it "returns a " do
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 20.99, max_price: 29.99 }
+      expect(response).to have_http_status(:success)
+      json_response = JSON.parse(response.body)
+    end
+  end
 end
