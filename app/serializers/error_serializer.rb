@@ -1,22 +1,16 @@
 class ErrorSerializer
-  include JSONAPI::Serializer
-
-  def initialize(error_object)
-    @error_object = error_object
-  end
-
-  def serialize_json
-    {
-      errors: [
+    def initialize(error_object)
+        @error_object = error_object
+    end
+  
+    def serialize_json
         {
-          status: @error_object.status_code,
-          message: @error_object.message,
+            errors: [
+                {
+                    status: @error_object.status_code.to_s,
+                    title: @error_object.message
+                }
+            ]
         }
-      ],
-      data: {
-          result: nil
-      }
-    }
-  end
-
+    end
 end

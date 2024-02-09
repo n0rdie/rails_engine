@@ -18,4 +18,9 @@ RSpec.describe "Api::V1::Items::Merchant", type: :request do
         json_response = JSON.parse(response.body, symbolize_names: true)
         expect(json_response[:data][:attributes][:name]).to eq(merchant.name)
     end
+
+    it "6. Relationship Endpoints -- Item's Merchant [SAD]" do
+        get "/api/v1/items/1/merchant"
+        expect(response).to_not be_successful
+    end
 end
