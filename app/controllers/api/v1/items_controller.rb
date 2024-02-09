@@ -1,6 +1,7 @@
 class Api::V1::ItemsController < ApplicationController
   def find
-    item = SearchFacade.new(params).find_item
+    facade = SearchFacade.new(params[:name], params[:min_price], params[:max_price])
+    item = facade.search_result
     render json: ItemSerializer.new(item)
   end
 
