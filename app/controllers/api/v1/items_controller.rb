@@ -9,20 +9,15 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    render json: ItemSerializer.new(Item.create(item_params))
+    render json: ItemSerializer.new(Item.create(item_params)), status: :created
   end
   
   def update
-    item = Item.find(params[:id])
-    if item
-      item.update(item_params)
-      render json: ItemSerializer.new(item)
-    else
-      render json: { message: "Item update failed" }
-    end
+    result = ItemUpdater.update(params[:id], item_params)
+    render result
   end
 
-  def destroy
+  def delete
     ItemDestroyer.destroy(params[:id])
   end
 
