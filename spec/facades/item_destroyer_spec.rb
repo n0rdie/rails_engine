@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ItemDestroyer do
+RSpec.describe ItemDestroyer, type: :facade do
   describe ".destroy" do
     let!(:merchant) { create(:merchant) }
     let!(:customer) { create(:customer) }
