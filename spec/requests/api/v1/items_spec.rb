@@ -27,6 +27,23 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(Item.last.merchant_id).to eq(merchant.id)
     end
 
+    it "3: Create an Item [SAD]" do
+      original_num_items = Item.all.count
+
+      merchant = create(:merchant)
+      new_item_data = ({
+        "name": 1,
+        "unit_price": "one hundred",
+        "merchant_id": merchant.id
+      })
+
+      post "/api/v1/items", headers: {"CONTENT_TYPE" => "application/json"}, params: JSON.generate(item: new_item_data)
+
+      expect(response).to_not be_successful
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data[:errors].first[:status]).to eq("404")
+    end
+
     it "returns all items" do
       get api_v1_items_path
 

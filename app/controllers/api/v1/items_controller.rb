@@ -1,4 +1,6 @@
 class Api::V1::ItemsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+
   def index
     render json: ItemSerializer.new(Item.all)
   end
@@ -9,7 +11,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    render json: ItemSerializer.new(Item.create(item_params)), status: :created
+    item = Item.create(item_params)
+    if item.save
+      render json: ItemSerializer.new(item)#, status: 201
+    else
+      render json: ErrorSerializer.new(ErrorMessage.new("Save failed", 404))
+      .serialize_json, status: :not_found
+    end
   end
   
   def update
@@ -26,4 +34,9 @@ class Api::V1::ItemsController < ApplicationController
   def item_params
     params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id)
   end
+
+  #def not_found_response(exception)
+  #  render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
+  #  .serialize_json, status: :not_found
+  #end
 end
