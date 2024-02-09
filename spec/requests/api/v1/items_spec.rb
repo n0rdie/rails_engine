@@ -102,10 +102,12 @@ RSpec.describe "Api::V1::Items", type: :request do
       @item_3 = create(:item, name: "Apple", unit_price: 11.99)
       @item_4 = create(:item, name: "Google", unit_price: 27.32)
       @item_5 = create(:item, name: "Facebook", unit_price: 13.64)
+      @item_5 = create(:item, name: "ZHaruko", unit_price: 999.00)
     end
 
     it "will do a partial name search for an item and return an item that matches the criteria" do
       get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { name: "oG" }
+
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
 
@@ -132,7 +134,7 @@ RSpec.describe "Api::V1::Items", type: :request do
     end
 
     it "searches for an item by minimum price, and if more than one match criteria, it will take the item whose name is lowest (closer to 'a'), alphabetically" do
-      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 12.00 }
+      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 13.00 }
 
       expect(response).to have_http_status(:success)
       json_response = JSON.parse(response.body)
@@ -158,11 +160,54 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(json_response["data"]["attributes"]["unit_price"]).to eq(12.09)
       expect(json_response["data"]["attributes"]["merchant_id"]).to eq(@item_2.merchant_id)
     end
+  end
+  
+  describe "sad paths" do 
+    before do
+      @item_1 = create(:item, name: "Alcoa", unit_price: 19.99)
+      @item_2 = create(:item, name: "Amazon", unit_price: 12.09)
+      @item_3 = create(:item, name: "Apple", unit_price: 11.99)
+      @item_4 = create(:item, name: "Google", unit_price: 27.32)
+      @item_5 = create(:item, name: "Facebook", unit_price: 13.64)
+      # @item_6 = create(:item, name: "ZHaruko", unit_price: 999.00)
+    end
 
-    it "returns a " do
-      get "/api/v1/items/find", headers: {"CONTENT_TYPE" => "application/json"}, params: { min_price: 20.99, max_price: 29.99 }
-      expect(response).to have_http_status(:success)
+    it "will gracefully handle a search where an item's name does not exist" do 
+      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: "Darlington Shoe Emporium" }
+      expect(response).to_not be_successful
+      expect(response.status).to eq(404)
+
       json_response = JSON.parse(response.body)
+      expect(json_response["errors"]).to be_a(Array)
+      expect(json_response["errors"].first["status"]).to eq(404)
+      expect(json_response["errors"].first["message"]).to eq("Couldn't find an item with the name Darlington Shoe Emporium")
+    end
+
+    it "will gracefully handle a search where a minimum unit price is less than zero" do 
+      min = -10.23
+      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { min_price: min }
+      
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["errors"]).to be_a(Array)
+      expect(json_response["errors"].first["status"]).to eq(400)
+      expect(json_response["errors"].first["message"]).to eq("Min price must be greater than or equal to zero")
+    end
+
+    it "will gracefully handle a search where both an item's name minimum price is in the request" do 
+      min = 12.30
+      facebook = @item_5.name
+
+      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: facebook, min_price: min }
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["errors"]).to be_a(Array)
+      expect(json_response["errors"].first["status"]).to eq(400)
+      expect(json_response["errors"].first["message"]).to eq("Can't send both a name and price in the request")
     end
   end
 end
