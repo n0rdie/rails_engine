@@ -10,7 +10,11 @@ class ErrorSerializer
                     status: @error_object.status_code.to_s,
                     title: @error_object.message
                 }
-            ]
+            ],
+            data: {
+                value: nil
+            }
+            
         }
     end
 end

@@ -1,5 +1,9 @@
 class Api::V1::ItemsController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+  def find
+    facade = ItemSearchFacade.new(params[:name], params[:min_price], params[:max_price])
+    item = facade.search_result
+    render json: ItemSerializer.new(item)
+  end
 
   def index
     render json: ItemSerializer.new(Item.all)
