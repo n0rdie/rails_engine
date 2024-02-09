@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Items::Merchant", type: :request do
-    it "6. Relationship Endpoints -- Item's Merchant" do
+    it "6. Relationship Endpoints -- Merchant's Items" do
         merchant = create(:merchant)
 
         new_item_data_1 = ({
@@ -27,5 +27,10 @@ RSpec.describe "Api::V1::Items::Merchant", type: :request do
         expect(json_response[:data].count).to eq(2)
         expect(json_response[:data][0][:attributes][:name]).to eq("item1")
         expect(json_response[:data][1][:attributes][:name]).to eq("item2")
+    end
+
+    it "6. Relationship Endpoints -- Merchant's Items [SAD]" do
+        get "/api/v1/merchants/1000/items"
+        expect(response).to_not be_successful
     end
 end
