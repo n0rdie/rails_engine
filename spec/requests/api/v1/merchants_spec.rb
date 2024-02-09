@@ -58,15 +58,15 @@ RSpec.describe "Api::V1::Merchants", type: :request do
     end
   end
 
-  # it "will gracefully handle a search where no merchants can be found in partial name search" do 
-  #   sad_name = "23423"
-  #   get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: sad_name }
-  #   expect(response).to_not be_successful
-  #   expect(response.status).to eq(404)
-
-  #   json_response = JSON.parse(response.body)
-  #   expect(json_response["errors"]).to be_a(Array)
-  #   expect(json_response["errors"].first["status"]).to eq(404)
-  #   expect(json_response["errors"].first["message"]).to eq("Couldn't find any merchants matching #{sad_name}")
-  # end
+  it "will gracefully handle a search where no merchants can be found in partial name search" do 
+    sad_name = "23423"
+    get "/api/v1/merchants/find_all", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: sad_name }
+    expect(response).to_not be_successful
+    expect(response.status).to eq(404)
+    
+    json_response = JSON.parse(response.body)
+    expect(json_response["errors"]).to be_a(Array)
+    expect(json_response["errors"].first["status"].to_i).to eq(404)
+    expect(json_response["errors"].first["title"]).to eq("Couldn't find any merchants matching #{sad_name}")
+  end
 end
