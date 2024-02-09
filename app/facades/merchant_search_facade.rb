@@ -9,7 +9,7 @@ class MerchantSearchFacade
 
   def find_all_name
     merchants = Merchant.where("name ILIKE ?", "%#{@name}%")
-    raise ActionController::BadRequest.new("Couldn't find any merchants matching #{@name}") unless merchants
+    raise ActiveRecord::RecordNotFound.new("Couldn't find any merchants matching #{@name}") unless merchants.present?
     merchants
   end
 end
