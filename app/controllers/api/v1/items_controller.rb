@@ -1,4 +1,9 @@
 class Api::V1::ItemsController < ApplicationController
+  def find
+    item = SearchFacade.new(params).find_item
+    render json: ItemSerializer.new(item)
+  end
+
   def index
     render json: ItemSerializer.new(Item.all)
   end
@@ -13,6 +18,7 @@ class Api::V1::ItemsController < ApplicationController
   end
   
   def update
+    # TODO On branch US-4... create sad paths for unfound items (e.g. id = 1234545234234234 does not exist)
     item = Item.find(params[:id])
     if item
       item.update(item_params)
