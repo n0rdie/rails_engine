@@ -10,11 +10,11 @@ class Api::V1::MerchantsController < ApplicationController
     render json: MerchantSerializer.new(merchant)
   end
 
-  private
+  #private
 
-  def not_found_response(exception)
-    render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
-    .serialize_json, status: :not_found
-  end
+  #def not_found_response(exception)
+  #  render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
+  #  .serialize_json, status: :not_found
+  #end
 
 end

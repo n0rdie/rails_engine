@@ -35,8 +35,8 @@ class Api::V1::ItemsController < ApplicationController
     params.require(:item).permit(:id, :name, :description, :unit_price, :merchant_id)
   end
 
-  def not_found_response(exception)
-    render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
-    .serialize_json, status: :not_found
-  end
+  #def not_found_response(exception)
+  #  render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
+  #  .serialize_json, status: :not_found
+  #end
 end

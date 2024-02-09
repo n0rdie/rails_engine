@@ -161,8 +161,8 @@
           6,
           null,
           null,
-          1,
-          0,
+          null,
+          null,
           null,
           null,
           null
@@ -171,12 +171,12 @@
       "/Users/quinnordmark/Desktop/Turing/3mod/2week/rails_engine/app/controllers/application_controller.rb": {
         "lines": [
           1,
-          1,
           null,
-          1,
           null,
-          1,
-          0,
+          null,
+          null,
+          null,
+          null,
           null,
           null,
           null
@@ -278,10 +278,10 @@
           1,
           null,
           null,
-          1,
           null,
-          1,
-          0,
+          null,
+          null,
+          null,
           null,
           null,
           null,
@@ -289,6 +289,6 @@
         ]
       }
     },
-    "timestamp": 1707504915
+    "timestamp": 1707505181
   }
 }
