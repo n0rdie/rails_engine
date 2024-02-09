@@ -226,14 +226,13 @@ RSpec.describe "Api::V1::Items", type: :request do
     end
 
     it "will gracefully handle a search where an item's name does not exist" do 
-      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: "Darlington Shoe Emporium" }
+      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { name: "3242" }
       expect(response).to_not be_successful
       expect(response.status).to eq(404)
-
       json_response = JSON.parse(response.body)
       expect(json_response["errors"]).to be_a(Array)
-      expect(json_response["errors"].first["status"]).to eq(404)
-      expect(json_response["errors"].first["message"]).to eq("Couldn't find an item with the name Darlington Shoe Emporium")
+      expect(json_response["errors"].first["status"].to_i).to eq(404)
+      expect(json_response["errors"].first["title"]).to eq("Couldn't find an item with the name 3242")
     end
 
     it "will gracefully handle a search where a minimum unit price is less than zero" do 
@@ -245,8 +244,8 @@ RSpec.describe "Api::V1::Items", type: :request do
 
       json_response = JSON.parse(response.body)
       expect(json_response["errors"]).to be_a(Array)
-      expect(json_response["errors"].first["status"]).to eq(400)
-      expect(json_response["errors"].first["message"]).to eq("Min price must be greater than or equal to zero")
+      expect(json_response["errors"].first["status"].to_i).to eq(400)
+      expect(json_response["errors"].first["title"]).to eq("Min price must be greater than or equal to zero")
     end
 
     it "will gracefully handle a search where both an item's name minimum price is in the request" do 
@@ -259,8 +258,8 @@ RSpec.describe "Api::V1::Items", type: :request do
 
       json_response = JSON.parse(response.body)
       expect(json_response["errors"]).to be_a(Array)
-      expect(json_response["errors"].first["status"]).to eq(400)
-      expect(json_response["errors"].first["message"]).to eq("Can't send both a name and price in the request")
+      expect(json_response["errors"].first["status"].to_i).to eq(400)
+      expect(json_response["errors"].first["title"]).to eq("Can't send both a name and price in the request")
     end
   end
 end
