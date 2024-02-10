@@ -11,10 +11,10 @@ class ErrorSerializer
                     title: @error_object.message
                 }
             ],
-            data: {
-                value: nil
-            }
             
+            data: {
+                res: @error_object.data
+            }
         }
     end
 end
