@@ -222,7 +222,6 @@ RSpec.describe "Api::V1::Items", type: :request do
       @item_3 = create(:item, name: "Apple", unit_price: 11.99)
       @item_4 = create(:item, name: "Google", unit_price: 27.32)
       @item_5 = create(:item, name: "Facebook", unit_price: 13.64)
-      # @item_6 = create(:item, name: "ZHaruko", unit_price: 999.00)
     end
 
     it "will gracefully handle a search where an item's name does not exist" do 
@@ -260,6 +259,20 @@ RSpec.describe "Api::V1::Items", type: :request do
       expect(json_response["errors"]).to be_a(Array)
       expect(json_response["errors"].first["status"].to_i).to eq(400)
       expect(json_response["errors"].first["title"]).to eq("Can't send both a name and price in the request")
+    end
+
+    it "will gracefully handle a search where the minimum is so high no item matches" do 
+      sad_price = 50
+      get "/api/v1/items/find", headers: {"CONTENT-TYPE" => "application/json"}, params: { min_price: sad_price }
+      expect(response).to_not be_successful
+      expect(response.status).to eq(404)
+
+      json_response = JSON.parse(response.body)
+      expect(json_response["errors"]).to be_a(Array)
+      expect(json_response["errors"].first["status"].to_i).to eq(404)
+      expect(json_response["errors"].first["title"]).to eq("Couldn't find an item with a unit price greater than or equal to #{sad_price}")
+      expect(json_response["data"]).to be_a(Object)
+      expect(json_response["data"]["res"]).to eq([])
     end
   end
 end
