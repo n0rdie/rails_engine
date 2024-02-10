@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
-  rescue_from ActionController::BadRequest, with: :handle_bad_request
+  rescue_from ActionController::BadRequest, with: :bad_request_response
+  rescue_from CustomRecordNotFound, with: :custom_not_found_response
 
   private
 
@@ -10,9 +11,15 @@ class ApplicationController < ActionController::API
     ).serialize_json, status: :not_found
   end
 
-  def handle_bad_request(exception)
+  def bad_request_response(exception)
     render json: ErrorSerializer.new(
       ErrorMessage.new(exception.message, 400)
     ).serialize_json, status: :bad_request
+  end
+
+  def custom_not_found_response(exception)
+    render json: ErrorSerializer.new(
+      ErrorMessage.new(exception.message, 404, exception.data)
+    ).serialize_json, status: :not_found
   end
 end
