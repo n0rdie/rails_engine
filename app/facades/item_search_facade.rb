@@ -30,12 +30,12 @@ class ItemSearchFacade
   end
 
   def find_min
-    if @min.to_f >= 0.0
-      item = Item.where("unit_price >= ?", @min).order(:name).first
-      raise ActiveRecord::RecordNotFound.new("Couldn't find an item greater than or equal to #{@min}") unless item
-      item
+    if @min.to_f < 0.0
+      raise ActionController::BadRequest.new("Min price must be greater than or equal to zero")
     else
-      raise ActionController::BadRequest.new("Min price must be greater than or equal to zero") unless item
+      item = Item.where("unit_price >= ?", @min).order(:name).first
+      raise ActiveRecord::RecordNotFound.new("Couldn't find an item with a unit price greater than or equal to #{@min}") unless item
+      item
     end
   end
 
