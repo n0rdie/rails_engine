@@ -68,5 +68,7 @@ RSpec.describe "Api::V1::Merchants", type: :request do
     expect(json_response["errors"]).to be_a(Array)
     expect(json_response["errors"].first["status"].to_i).to eq(404)
     expect(json_response["errors"].first["title"]).to eq("Couldn't find any merchants matching #{sad_name}")
+    expect(json_response["data"]).to be_a(Object)
+    expect(json_response["data"]["res"]).to eq([])
   end
 end
